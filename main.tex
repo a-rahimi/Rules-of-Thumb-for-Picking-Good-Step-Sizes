@@ -20,6 +20,44 @@
 
 \maketitle
 
+\section{Idea for exposition 1}
+
+We're used to thinking of gradient descent as an algorithm whose convergence rate depends on the condition number of the
+optimization problem. For example, we've come to accept that to minimize $f(x) = \|A (x-x*)\|^2/2$ on $\R^d$, gradient
+descent requires $O(\kappa \log 1/\epsilon)$ steps to achieve a relative error of $\epsilon$.
+
+But if we pick the perfecct step sizing rule, gradient descent can optimize the
+quadratic in exactly $d$ steps. This requres an impractical step sizing rule.
+Computing this step size is as hard as minimizing $f(x)$ itself, but the
+existence of the rule showcases how important step sizes are in optimization.
+
+In the case of the deterministic quadratic, the step size at iteration $t$ is the square reciprocal of the $t$th singular value of $A$. In other words, the iterations
+\[
+        x_{t+1} = x_t - \frac{1}{\sigma^2(A)} \nabla f(x_t)
+\]
+reaches a stationary point in $d$ iterations and $x_d = x^*$, the minimizer of $f$.
+
+This observation is important because it points out gradient descent is a vast family of algorithms whose performance can vary dramatically from linear dependence on the condition number to one that converges in only $d$ iterations. Even though in this case computing the step size is hard, it might be possible to approximate this step sizing rule to obtain fast rates for deterministic gradient descent.
+
+
+\section{Idea for exposition 2}
+
+Title of the paper: Scalar Preconditioners for Faster Gradient Descent
+
+Scalar preconditioning sounds like a ridiculous concept: the whole point of a preconditioner is to shear the gradient with a matrix. A scalar preconditioning at best scales the gradient, serving more as a step size than a preconditioner.
+
+But we show that a careful choice of a scalar preconditioner (or equivalently a step size), can improve the rate of convergence of Gradient Descent and its stochastic variant by a huge amount: the right scalar can completely eliminate the rate's dependence on the problem's condition number.
+
+In the case of deterministic gradient descent, setting the step size to [...described above...] causes gradient descent to converge in just d steps. This precise step size is as hard to compute as the minimum itself, so the iterations are not a practical optimization procedure.
+
+But if one has a priori knowledge about the spectrum of the problem,  replacing the step sizes with these approximations results in fast convergence. For example, if there is reason to believe the spectrum of $A$ decays as $1/t$, a periodic step sizing rule of $\lambda_t \alpha t^2 \text{mod} d$ speeds up convergence (conjecture!)
+
+A similar result hold in the stochastic case. In that case, the step sizing rule is more easily expressed as a linear search. On its face, this linear search appears to be as hard to compute as the optimization problem itself, but approximations are possible. If $f(x) = \|Ax - b\|^2$, line search is on $\L(\alpha) = (x'-x^*)'\left(A'A\right)^{-1}(x'-x*)$ with $x'=x_t-\lambda \nabla f(x_t)$. This line search appears to require both the inverse of $A'A$ and $x^*$ itself, but in fact, because we only need to extract an approximately minimizing $\alpha$ there is an easy way to compute it.
+
+(spitballing here) The equivalent line problem is $\L(\alpha) = ...$ which is just the residual of the least squares problem .... Computing this residual is straightforward. Finding the minimizer over $\alpha$ requires a bisection search on this residual.
+
+This result appears to violate known lower bounds on the performance of least squares algorithm that have oracle access to the gradient. But in the deterministic case, we relied on side information about the spectrum of the matrix. In the stochastic case, we had access to a bisection search on a surrogate problem that requires full knowledge of $A$.
+
 \section{Introduction}
 
 In deterministic numerical optimization, where search directions depend only on the current iterate, line searches offer a way to pick step sizes that guarantee fast convergence. In the stochastic setting, where search directions are random functions of the current iterate, relatively little seems to be know about line searches. What is the ideal step size in each iteration? Should one strive to approximate the true mean function and conduct line searches on it? Or is it better to perform a line search on the stochastic instances of this function? Is a line search even a good idea?
