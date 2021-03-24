@@ -69,7 +69,7 @@ Surprises abound:
     \item  Even if one had access to the true mean function, and one isn't charged for the line search at each iteration, a line search on the mean function would cause slower convergence than a fixed step size.
     \item SGD converges much faster with a line search on the random realizations of the function than on the mean function, despite the fact that the mean function is the objective of interest.
     \item One can represent the search for the optimal line search as a Markov Decision Process, and explicitly compute in closed form the optimal function on which to conduct the line search. This function turns out to be neither of the aforementioned candidates, but rather, a deterministic function whose Hessian is the inverse of that of the mean function's. 
-    \item The rate of convergence of SGD with this optimal line search has nearly the same asymptotic rate  as Newton's method with exact Hessian and stochastic gradient. This rate depends only logarithmically on the condition number of the problem. In a deterministic setting, it would be unfathomable for gradient descent with any scalar step size to achieve such a rate. But in the the stochastic setting, scalar step sizes can steer the expected direction of the gradient, and serve as preconditioners.
+    \item The rate of convergence of SGD with this optimal line search has nearly the same asymptotic rate  as Newton's method with exact Hessian and stochastic gradient. This rate depends only logarithmically on the condition number of the problem. 
 \end{itemize}
 
 
